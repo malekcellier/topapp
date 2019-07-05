@@ -1,0 +1,41 @@
+# Author: Malek Cellier
+# Email: malek.cellier@gmail.com
+# Created: 2019-07-03
+
+# Aliases to the posiions definition
+# this allows for more room to specify and add transforms
+# those can be referenced in topology.yaml by their name
+
+positions_c_1:
+  class: custom
+  preset: c_1
+  transformations:
+    rotate: 90
+    scale: 100
+    translate: {delta_x: 10, delta_y: 15}
+
+custom_c2:
+  class: custom
+  preset: c_2
+  transformations:
+    scale: 100
+
+grid_g1:
+  class: grid
+  preset: g_1
+  transformations:
+    translate: {delta_x: 10, delta_y: 750}
+
+grid_g3:
+  class: grid
+  preset: g_3
+  transformations:
+    translate: -2000
+
+circle_c_2:
+  class: circle
+  preset: c_2
+
+custom_c_3:
+  class: custom
+  preset: c_3

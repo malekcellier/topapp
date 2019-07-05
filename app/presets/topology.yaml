@@ -1,0 +1,41 @@
+# Author: Malek Cellier
+# Email: malek.cellier@gmail.com
+# Created: 2019-07-03
+
+topo_1:
+  nodes:
+    type_a:
+      - {position: {class: custom, preset: c_1, transformations: {scale: 100}}, model: a_1}
+      - {position: c_2@circle, model: a_1}
+    type_b:
+      - {position: custom_c2, motion: r_1@random, model: m_1}
+      - {position: grid_g1, motion: r_2@random, model: m_2}
+      - {position: g_2@grid, motion: r_2@random, model: m_3}
+      - {position: grid_g3, motion: r_1@random, model: m_4}
+  connections:
+    - {source: type_a, sink: type_b, model: simple}
+
+topo_2:
+  nodes:
+    type_a:
+      - {position: positions_c_1, model: random_r_2, model: a_1}
+      - {position: c_2@circle, model: random_r_1, model: a_2}
+    type_b:
+      - {position: g_1@grid, motion: random_r_1, model: b_1}
+      - {position: g_2@grid, motion: random_r_2, model: b_2}
+      - {position: g_3@grid, motion: random_r_1, model: b_3}
+      - {position: c_4@circle, motion: random_r_2, model: b_4}
+    type_c:
+      - {position: c_3@circle, motion: random_r_2, model: c_1}
+  connections:
+    - {source: type_a, sink: type_b, model: simple}
+    - {source: type_b, sink: type_c, model: simple}
+
+topo_3:
+  nodes:
+    type_a:
+      - {position: {class: custom, preset: c_2, transformations: {scale: 100}}, model: m_1}
+    type_b:
+      - {position: c_5@circle, model: m_1}
+  connections:
+    - {source: type_a, sink: type_b, model: simple}

@@ -1,0 +1,47 @@
+# Author: Malek Cellier
+# Email: malek.cellier@gmail.com
+# Created: 2019-07-03
+
+custom:
+  c_1:
+    x: [0, 1, 2, 3, 4, 5, 6, 10]
+    y: [1, -1, 2, -2, 3, -3, 2, -2]
+  c_2:
+    x: [0, -1, 1, 1, -1]
+    y: [0, -1, -1, 1, 1]
+  c_3:
+    x: [10, 30, 40, 21]
+    y: [1, 10, 7, -2]
+
+grid:
+  g_1:
+    x: {min: 0, max: 500, step: 100}
+    y: {min: 0, max: 400, step: 200}
+  g_2:
+    x: {min: 500, max: 800, step: 50}
+    y: {min: -600, max: -400, step: 50}
+  g_3:
+    x: {min: -1500, max: 1500, step: 500}
+    y: {min: -1500, max: 1500, step: 500}
+
+circle:
+  c_1:
+    center: {x: 0, y: 0}
+    radius: 150
+    n: 10
+  c_2:
+    center: {x: 250, y: 0}
+    radius: 500
+    n: 20
+  c_3:
+    center: {x: -500, y: 100}
+    radius: 100
+    n: 50
+  c_4:
+    center: {x: -500, y: -200}
+    radius: 150
+    n: 25
+  c_5:
+    center: {x: 0, y: -0}
+    radius: 100
+    n: 8

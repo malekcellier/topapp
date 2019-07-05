@@ -1,0 +1,21 @@
+# Author: Malek Cellier
+# Email: malek.cellier@gmail.com
+# Created: 2019-07-03
+
+# Aliases to the motions definition
+
+custom_c_1:
+  class: custom
+  preset: c_1
+
+custom_c_2:
+  class: custom
+  preset: c_2
+
+custom_c_3:
+  class: custom
+  preset: c_3
+
+random_g_1:
+  class: random
+  preset: r_1
