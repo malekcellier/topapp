@@ -5,16 +5,19 @@
 
 import os
 import sys
-from PySide2.QtWidgets import (QApplication, QMainWindow, QDockWidget, QTabWidget, QWidget,
-                               QGraphicsView, QGraphicsScene, QGraphicsItem, QAction,
+from qtpy.QtWidgets import (QApplication, QMainWindow, QDockWidget, QTabWidget, QWidget,
+                               QGraphicsView, QGraphicsScene, QGraphicsItem, QAction, QTreeView,
                                QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem,
-                               QMessageBox, QHBoxLayout)
-from PySide2.QtGui import (QIcon)
-from PySide2.QtCore import (Qt)
-from PySide2.QtDataVisualization import (QtDataVisualization)
-from PySide2.Qt3DCore import (Qt3DCore)
-from PySide2.Qt3DRender import (Qt3DRender)
-from PySide2.Qt3DExtras import (Qt3DExtras)
+                               QMessageBox, QHBoxLayout, QVBoxLayout)
+from qtpy.QtGui import (QIcon)
+from qtpy.QtCore import (Qt)
+#from qtpy.QtDataVisualization import (QtDataVisualization)
+#from qtpy.Qt3DCore import (Qt3DCore)
+#from qtpy.Qt3DRender import (Qt3DRender)
+#from qtpy.Qt3DExtras import (Qt3DExtras)
+
+from .project_model import ProjectModel
+from .project_delegate import TreeDelegate
 
 
 def pwdi(icon_name):
@@ -93,7 +96,7 @@ class TopologyGui(QMainWindow):
         """The main window"""
         self.setWindowTitle('Qt experiments')
         self.setWindowIcon(QIcon('icons/light-bulb.png'))
-        self.setGeometry(900, 200, 1200, 800)
+        self.setGeometry(1920+100, 100, 1200, 800)
 
         self._build_tab_widget()
 
@@ -248,10 +251,21 @@ class TopologyGui(QMainWindow):
         self._build_bottom_dock()
 
     def _build_left_dock(self):
+        # QTreeView for the project view        
         w_project_tree = QDockWidget("Project tree", self)
         w_project_tree.setFloating(False)
         self._docks['project tree'] = w_project_tree
         self.addDockWidget(Qt.LeftDockWidgetArea, w_project_tree)
+        # Add the treeview
+        treeview = QTreeView(w_project_tree)
+        treedelegate = TreeDelegate()
+        treeview.setItemDelegate(treedelegate)
+        pm = ProjectModel()
+        treeview.setModel(pm)
+        treeview.expandAll()
+        treeview.resizeColumnToContents(0)
+        treeview.resizeColumnToContents(1)
+        w_project_tree.setWidget(treeview)
 
         w_properties = QDockWidget("Properties editor", self)
         w_properties.setFloating(False)
