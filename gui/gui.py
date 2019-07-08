@@ -19,6 +19,8 @@ from qtpy.QtCore import (Qt, QUrl, QSizeF)
 from .project_model import ProjectModel
 from .project_delegate import TreeDelegate
 
+from .gui_topology import GuiTopology
+
 
 def pwdi(icon_name):
     """Returns the path to the requested icon"""
@@ -41,6 +43,7 @@ class DataViz(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
 
+
 class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     """Using 3D library
 
@@ -53,7 +56,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     """
     def __init__(self, parent):
         super().__init__(parent)
-        self.rootContext().setContextProperty("modelData", "")
+        self.rootContext().setContextProperty("modelData", [])
         self.setSource(QUrl.fromLocalFile("gui/qml/QmlScene.qml"))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -277,7 +280,11 @@ class TopologyGui(QMainWindow):
 
         def treeItemClicked(index):
             data = index.data(Qt.DisplayRole)
-            self._widgets['sceneviz'].rootContext().setContextProperty("modelData", data)
+            print(data)
+            print(f'parent: {index.parent().isValid()}')
+            if not index.parent().isValid():
+                topo = GuiTopology(data)
+                self._widgets['sceneviz'].rootContext().setContextProperty("modelData", topo)
 
         treeview.clicked.connect(treeItemClicked)
 

@@ -41,6 +41,7 @@ Entity {
         id: material
     }
 
+    /*
     SphereMesh {
         id: sphereMesh
         radius: 3
@@ -59,20 +60,12 @@ Entity {
         id: sphereEntity
         components: [ sphereMesh, material, sphereTransform ]
     }
+    */
 
-    PlaneMesh {
-        id: gridMesh
-        height: 100
-        width: 100
-    }
+    Grid {}
 
-    Entity {
-        id: grid
-        components: [gridMesh, material]
-    }
+    AllAxisEntity {}
 
-    AllAxisEntity {
-        id: allaxis
-    }
+    TypeANodeEntity {}
 
 }

@@ -29,6 +29,14 @@ Item {
             SceneEntity {}
 
         }
+
+        Text {
+            text: 'name: ' + modelData.presetName
+        }
+        Text {
+            text: 'nodes: ' + modelData.nodes[0].positions[0].x
+            y: 15
+        }
     }
 
  

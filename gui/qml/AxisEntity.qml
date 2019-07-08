@@ -17,7 +17,7 @@ Entity {
 
     CylinderMesh {
         id: cylinderMesh
-        radius: 1
+        radius: 0.2
         length: 10
     }
 
@@ -32,9 +32,9 @@ Entity {
 
     ConeMesh {
         id: coneMesh
-        bottomRadius: cylinderMesh.radius*1.2
+        bottomRadius: cylinderMesh.radius*4
         topRadius: 0
-        length: cylinderMesh.length/5
+        length: cylinderMesh.length/3
     }
 
     Transform {

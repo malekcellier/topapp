@@ -12,7 +12,7 @@ Entity {
 
   GridMaterial {
     id: gridMaterial
-    lineWidth: 2.0
+    lineWidth: 1.0
     lineColor: "white"
     gridResolution: 0.2
   }
@@ -26,7 +26,7 @@ Entity {
   Transform {
     id: transform
     scale3D: Qt.vector3d(1, 1, 1)
-    rotation: fromAxisAndAngle(Qt.vector3d(1, 0.5, 0.5), 22)
+    rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 90)
   }
 
   components: [ planeMesh, gridMaterial, transform ]
