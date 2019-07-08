@@ -2,10 +2,9 @@
 # Email: malek.cellier@gmail.com
 # Created: 2019-07-03
 
-import os
-import yaml
 import matplotlib.pyplot as plt
 
+from app.presets import presets
 from app.nodes import Nodes
 from app.connections import Connections
 
@@ -27,14 +26,9 @@ class Topology:
         _misc (dict): misc parameters to configure the plots
 
     """
-    file_path = os.path.dirname(__file__)
-    file_name = os.path.join('presets', 'topology.yaml')
-    with open(os.path.join(file_path, file_name)) as fid:
-        _presets = yaml.load(fid, Loader=yaml.SafeLoader)
-        del fid, file_name, file_path
 
     def __init__(self, preset):
-        self.preset = self._presets[preset]
+        self.preset = presets.topology[preset]
         self.preset_name = preset
         self.nodes = {}
         self.connections = {}

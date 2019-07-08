@@ -28,3 +28,6 @@ class Presets:
         self.topology = self._presets['topology']
         self.positions = self._presets['positions']
         self.motions = self._presets['motions']
+
+
+presets = Presets()
