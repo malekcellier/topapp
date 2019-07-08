@@ -60,15 +60,10 @@ Entity {
         components: [ sphereMesh, material, sphereTransform ]
     }
 
-    PlaneMesh {
-        id: gridMesh
+    Grid {
+        id: grid
         height: 100
         width: 100
-    }
-
-    Entity {
-        id: grid
-        components: [gridMesh, material]
     }
 
     AllAxisEntity {

@@ -37,7 +37,7 @@ Effect {
           }
           renderStates: [
             CullFace { mode: CullFace.NoCulling },
-            DepthTest { depthFunction: DepthTest.Always },
+            DepthTest { depthFunction: DepthTest.Less },
             BlendEquationArguments {
               sourceRgb: BlendEquationArguments.SourceAlpha
               destinationRgb: BlendEquationArguments.OneMinusSourceAlpha
