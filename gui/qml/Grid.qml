@@ -8,7 +8,10 @@ import QtQuick 2.0 as QQ2
 import "effects"
 
 Entity {
+  id: grid
   property alias transform: transform
+  property real width
+  property real height
 
   GridMaterial {
     id: gridMaterial
@@ -19,14 +22,12 @@ Entity {
 
   PlaneMesh {
     id: planeMesh
-    width: 100
-    height: 100
+    width: grid.width
+    height: grid.height
   }
 
   Transform {
     id: transform
-    scale3D: Qt.vector3d(1, 1, 1)
-    rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 90)
   }
 
   components: [ planeMesh, gridMaterial, transform ]

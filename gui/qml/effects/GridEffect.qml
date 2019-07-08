@@ -23,10 +23,10 @@ Effect {
         Parameter { name: "lineWidth"; value: lineWidth },
         Parameter { name: "gridResolution"; value: gridResolution },
         Parameter { name: "lineColor"; value: Qt.vector4d(
-                                                 lineColor.r,
-                                                 lineColor.g,
-                                                 lineColor.b,
-                                                 lineColor.a) }
+                                                lineColor.r,
+                                                lineColor.g,
+                                                lineColor.b,
+                                                lineColor.a) }
       ]
 
       renderPasses: [
@@ -35,6 +35,17 @@ Effect {
             vertexShaderCode:   loadSource(Qt.resolvedUrl("../../shaders/grid.vert"))
             fragmentShaderCode: loadSource(Qt.resolvedUrl("../../shaders/grid.frag"))
           }
+          renderStates: [
+            CullFace { mode: CullFace.NoCulling },
+            DepthTest { depthFunction: DepthTest.Less },
+            BlendEquationArguments {
+              sourceRgb: BlendEquationArguments.SourceAlpha
+              destinationRgb: BlendEquationArguments.OneMinusSourceAlpha
+              sourceAlpha: BlendEquationArguments.SourceAlpha
+              destinationAlpha: BlendEquationArguments.OneMinusSourceAlpha
+            },
+            BlendEquation { blendFunction: BlendEquation.DontTrackValues }
+          ]
         }
       ]
     }
