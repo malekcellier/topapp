@@ -54,6 +54,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     """
     def __init__(self, parent):
         super().__init__(parent)
+        self.rootContext().setContextProperty("modelData", "")
         self.setSource(QUrl.fromLocalFile("gui/qml/QmlTest.qml"))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -274,6 +275,12 @@ class TopologyGui(QMainWindow):
         treeview.resizeColumnToContents(0)
         treeview.resizeColumnToContents(1)
         w_project_tree.setWidget(treeview)
+
+        def treeItemClicked(index):
+            data = index.data(Qt.DisplayRole)
+            self._widgets['sceneviz'].rootContext().setContextProperty("modelData", data)
+
+        treeview.clicked.connect(treeItemClicked)
 
         w_properties = QDockWidget("Properties editor", self)
         w_properties.setFloating(False)

@@ -5,6 +5,6 @@ Rectangle {
 
   Text {
     anchors.centerIn: parent
-    text: "QML view"
+    text: "QML view: " + modelData
   }
 }
