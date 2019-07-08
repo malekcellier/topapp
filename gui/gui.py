@@ -8,9 +8,10 @@ import sys
 from qtpy.QtWidgets import (QApplication, QMainWindow, QDockWidget, QTabWidget, QWidget,
                                QGraphicsView, QGraphicsScene, QGraphicsItem, QAction, QTreeView,
                                QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem,
-                               QMessageBox, QHBoxLayout, QVBoxLayout)
+                               QMessageBox, QHBoxLayout, QVBoxLayout, QSizePolicy)
+from qtpy.QtQuickWidgets import (QQuickWidget)
 from qtpy.QtGui import (QIcon)
-from qtpy.QtCore import (Qt)
+from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.QtDataVisualization import (QtDataVisualization)
 #from qtpy.Qt3DCore import (Qt3DCore)
 #from qtpy.Qt3DRender import (Qt3DRender)
@@ -41,8 +42,7 @@ class DataViz(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
 
-
-class SceneViz(QWidget):  # or from Qt3DExtras.Qt3DWindow):
+class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     """Using 3D library
 
     Placeholder for the OpenGL based input visualization which should allow the following:
@@ -54,6 +54,14 @@ class SceneViz(QWidget):  # or from Qt3DExtras.Qt3DWindow):
     """
     def __init__(self, parent):
         super().__init__(parent)
+        self.setSource(QUrl.fromLocalFile("gui/qml/QmlTest.qml"))
+        self.resizeMode = QQuickWidget.SizeRootObjectToView
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.rootObject().setWidth(self.width())
+        self.rootObject().setHeight(self.height())
 
 
 class TopologyGui(QMainWindow):
