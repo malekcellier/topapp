@@ -54,7 +54,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     def __init__(self, parent):
         super().__init__(parent)
         self.rootContext().setContextProperty("modelData", "")
-        self.setSource(QUrl.fromLocalFile("gui/qml/QmlTest.qml"))
+        self.setSource(QUrl.fromLocalFile("gui/qml/QmlScene.qml"))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
