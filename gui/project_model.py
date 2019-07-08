@@ -15,7 +15,6 @@ class ProjectModel(QStandardItemModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.load()
-        #self.setHeaderData(0, 'root')
         self.setColumnCount(2)
 
     def load(self):

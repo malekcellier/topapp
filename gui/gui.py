@@ -13,7 +13,6 @@ from qtpy.QtQuickWidgets import (QQuickWidget)
 from qtpy.QtGui import (QIcon)
 from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.QtDataVisualization import (QtDataVisualization)
-#from qtpy.Qt3DCore import (Qt3DCore)
 #from qtpy.Qt3DRender import (Qt3DRender)
 #from qtpy.Qt3DExtras import (Qt3DExtras)
 
@@ -55,7 +54,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     def __init__(self, parent):
         super().__init__(parent)
         self.rootContext().setContextProperty("modelData", "")
-        self.setSource(QUrl.fromLocalFile("gui/qml/QmlTest.qml"))
+        self.setSource(QUrl.fromLocalFile("gui/qml/QmlScene.qml"))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
