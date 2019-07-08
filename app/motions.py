@@ -27,7 +27,7 @@ class Motions(ABC):
         delta (dict): adjustement on top of the velocity. It contains vx, vy (ndarray).
     """
     file_path = os.path.dirname(__file__)
-    file_name = os.path.join('presets', 'motions.yaml')    
+    file_name = os.path.join('presets', 'motions.yaml')
     with open(os.path.join(file_path, file_name)) as fid:
         _presets = yaml.load(fid, Loader=yaml.SafeLoader)
         del fid, file_name, file_path

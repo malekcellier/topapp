@@ -1,0 +1,99 @@
+# Author: Malek Cellier
+# Email: malek.cellier@gmail.com
+# Created: 2019-07-05
+
+# Validation schemas for the input yaml
+# Cerberus is used for that purpose
+# 2019.07.05 can't the top level be validated the same way?
+
+positions:
+  custom:
+    x:
+      type: list
+      required: True
+      schema: {type: float}
+    y:
+      type: list
+      required: True
+      schema: {type: float}
+  grid:
+    x:
+      type: dict
+      required: True
+      contains: [min, max, step]
+      schema:
+        min: {type: float, required: True}
+        max: {type: float, required: True}
+        step: {type: float, required: True}
+    y:
+      type: dict
+      required: True
+      schema:
+        min: {type: float, required: True}
+        max: {type: float, required: True}
+        step: {type: float, required: True}
+  circle:
+    center:
+      type: dict
+      required: True
+      contains: [x, y]
+      schema:
+        x: {type: float, required: True}
+        y: {type: float, required: True}
+    radius:
+      type: float
+      required: True
+    n:
+      type: float
+      required: True
+      min: 1
+
+motions:
+  custom:
+    speed:
+      type: float
+      required: True
+    vx:
+      type: list
+      required: True
+      schema: {type: float}
+    vy:
+      type: list
+      required: True
+      schema: {type: float}
+  random:
+    speed:
+      type: float
+      required: True
+    max_angle_deg:
+      type: float
+      required: True
+    turn_probability:
+      type: float
+      required: True
+      min: 0
+      max: 1
+    
+
+topology:
+  nodes:
+    type: dict
+    required: True
+    valuesrules:
+      type: list
+      schema:
+        type: dict
+        allowed: [position, motion, model]
+        valuesrules:
+          anyof:
+            - {type: string}
+            - {type: dict, allowed: [class, preset, transformations]}
+  connections:
+    type: list
+    required: True
+    schema:
+      type: dict
+      allowed: [source, sink, model]
+      valuesrules:
+        type: string
+

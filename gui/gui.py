@@ -39,9 +39,9 @@ class DataViz(QWidget):
         super().__init__(parent)
 
 
-class SceneViz(QWidget): # or from Qt3DExtras.Qt3DWindow):
+class SceneViz(QWidget):  # or from Qt3DExtras.Qt3DWindow):
     """Using 3D library
-    
+
     Placeholder for the OpenGL based input visualization which should allow the following:
         - display scenes with 100s of shapes (basic shapes as cubes)
         - allow to drag the objects and signal the coordinates changes to the underlying object
@@ -55,7 +55,7 @@ class SceneViz(QWidget): # or from Qt3DExtras.Qt3DWindow):
 
 class TopologyGui(QMainWindow):
     """The entire application
-    
+
     # NOTE: is it good practice to keep a reference to all the functions that will serve as slots?
         all the functions from the underlying model are included in the object
     """
@@ -157,7 +157,7 @@ class TopologyGui(QMainWindow):
         self._actions['new']['motion'] = self._create_action('New motion', icon=pwdi('button_line.svg'), tip='New ellipse')
         self._actions['new']['model'] = self._create_action('New model', icon=pwdi('kde-edit.svg'), tip='New model')
         
-        self._actions['view'] = {}        
+        self._actions['view'] = {}
         self._actions['view']['zoom'] = self._create_action('Zoom', tip='Zoom')
         
         self._actions['windows'] = {}
@@ -191,7 +191,7 @@ class TopologyGui(QMainWindow):
             self._docks[a_string].setVisible(not self._docks[a_string].isVisible())
         return closure
 
-    def _build_menubar(self):        
+    def _build_menubar(self):
         self.menubar = self.menuBar()
         # Create menu items
         self._menus['file'] = self.menubar.addMenu('&File')
@@ -293,6 +293,9 @@ class TopologyGui(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setApplicationName('TopologyApp')
+    app.setOrganizationName('M.C.')
+    app.setWindowIcon(QIcon(pwdi('noun_Baby Penguin_57276.png')))
     win = TopologyGui()
     win.show()
     sys.exit(app.exec_())
