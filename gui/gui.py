@@ -13,7 +13,6 @@ from qtpy.QtQuickWidgets import (QQuickWidget)
 from qtpy.QtGui import (QIcon)
 from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.QtDataVisualization import (QtDataVisualization)
-#from qtpy.Qt3DCore import (Qt3DCore)
 #from qtpy.Qt3DRender import (Qt3DRender)
 #from qtpy.Qt3DExtras import (Qt3DExtras)
 
