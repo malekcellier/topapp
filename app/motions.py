@@ -4,9 +4,9 @@
 
 from abc import ABC, abstractmethod
 import numpy as np
-import os
 import matplotlib.pyplot as plt
-import yaml
+
+from app.presets import presets
 
 
 class Motions(ABC):
@@ -26,15 +26,10 @@ class Motions(ABC):
         n_points (int): number of points in the vectors
         delta (dict): adjustement on top of the velocity. It contains vx, vy (ndarray).
     """
-    file_path = os.path.dirname(__file__)
-    file_name = os.path.join('presets', 'motions.yaml')
-    with open(os.path.join(file_path, file_name)) as fid:
-        _presets = yaml.load(fid, Loader=yaml.SafeLoader)
-        del fid, file_name, file_path
 
     def __init__(self, preset, n_points=100):
         self.name = self.__class__.__name__.lower()
-        preset_ = self._presets[self.name].get(preset)
+        preset_ = presets.motions[self.name].get(preset)
         assert preset_ is not None, f'passed preset {preset} does not exist'
         self.preset_name = preset
         self.preset = preset_
