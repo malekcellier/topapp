@@ -64,7 +64,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
             register_types()
             main = "gui/qml/live.qml"
             self.rootContext().setContextProperty(
-                "userProjectPath", os.path.realpath('gui/qml')
+                "userProjectPath", QUrl.fromLocalFile(os.path.realpath(os.path.join(os.path.dirname(__file__), 'qml'))) 
             )
         else:
             main = "gui/qml/QmlScene.qml"
@@ -141,7 +141,7 @@ class TopologyGui(QMainWindow):
         # depending on the selection on the tree-widget
 
         # Scene is the representation in 3D of the scene to simulate
-        widget_sceneviz = SceneViz(parent=widget_tabs, live=True)
+        widget_sceneviz = SceneViz(parent=widget_tabs, live=False)
         widget_tabs.addTab(widget_sceneviz, 'Sceneviz')
         self._widgets['sceneviz'] = widget_sceneviz
         # Data is a set of plots of the toutput data
