@@ -6,7 +6,7 @@
 import os
 import sys
 from qtpy.QtWidgets import (QApplication, QMainWindow, QDockWidget, QTabWidget, QWidget,
-                               QGraphicsView, QGraphicsScene, QGraphicsItem, QAction, QTreeView,
+                               QGraphicsView, QGraphicsScene, QGraphicsItem, QAction, QTreeView, QTableView,
                                QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem,
                                QMessageBox, QHBoxLayout, QVBoxLayout, QSizePolicy)
 from qtpy.QtQuickWidgets import (QQuickWidget)
@@ -16,7 +16,8 @@ from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.Qt3DRender import (Qt3DRender)
 #from qtpy.Qt3DExtras import (Qt3DExtras)
 
-from .project_model import ProjectModel
+from .project_model import ProjectModel, TYPE_ROLE
+from .properties_model import PropertiesModel
 from .project_delegate import TreeDelegate
 
 from .gui_topology import GuiTopology
@@ -291,6 +292,10 @@ class TopologyGui(QMainWindow):
 
         def treeItemClicked(index):
             data = index.data(Qt.DisplayRole)
+            type_ = index.data(TYPE_ROLE)
+            print(f'type: {type_}')
+            print(data)
+            print(f'parent: {index.parent().isValid()}')
             if not index.parent().isValid():
                 # Scene is the representation in 3D of the scene to simulate
                 widget_tabs = self._widgets['tabs']#
@@ -305,11 +310,30 @@ class TopologyGui(QMainWindow):
 
         treeview.clicked.connect(treeItemClicked)
 
+        # Formatting Editor
         w_properties = QDockWidget("Properties editor", self)
         w_properties.setFloating(False)
         self._docks['properties'] = w_properties
         self.addDockWidget(Qt.LeftDockWidgetArea, w_properties)
+        # Create Container widget
+        container = QWidget(w_properties)
+        # Create a verticallayout in which we put a treeview and a tableview
+        v_layout = QVBoxLayout(w_properties)
+        # Positions Properties to start with
+        # the treeview will contain the widgets for the properties of the selected item in the tree
+        treeview = QTreeView(w_properties)
+        v_layout.addWidget(treeview)
+        v_layout.setStretchFactor(treeview, 2)
+        pm = PropertiesModel()
+        treeview.setModel(pm)
+        # The tableview will only contain editable x,y shown as rows
+        tableview = QTableView(w_properties)
+        v_layout.addWidget(tableview)
+        v_layout.setStretchFactor(tableview, 1)
+        container.setLayout(v_layout)
+        w_properties.setWidget(container)
 
+        # Formatting Editor
         w_formatting = QDockWidget("Formatting editor", self)
         w_formatting.setFloating(False)
         self._docks['formatting'] = w_formatting
