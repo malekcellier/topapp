@@ -31,6 +31,7 @@ class Connections:
         self.snk = nodes[sink]
         self._snk_name = sink
         self.values = -1*np.inf*np.ones((self.src.n_el, self.snk.n_el))
+        self.kpis = {}
         self.update()
 
     def update(self):
@@ -60,6 +61,12 @@ class Connections:
         y_snk, y_src = np.meshgrid(y_snk, y_src)
 
         self.values = np.sqrt((x_snk-x_src)**2+(y_snk-y_src)**2)
+
+    def compute(self):
+        """Compute dumy values for display purposes only"""
+        kpi_names = [f'var_{n:02}' for n in range(10)]
+        for kpi_name in kpi_names:
+            self.kpis[kpi_name] = np.random.rand(1000)
 
     def show(self):
         """Show the resulting values matrix"""

@@ -85,6 +85,7 @@ class TopologyGui(QMainWindow):
         self._docks = {}  # holds ref to docks for visibility toggling
         self._widgets = {}  # holds references to the widgets
         self._slots = {}
+        self.backends = {}
         self.load_back_end()
         self._build()
 
@@ -284,6 +285,7 @@ class TopologyGui(QMainWindow):
             print(f'parent: {index.parent().isValid()}')
             if not index.parent().isValid():
                 topo = GuiTopology(data)
+                self.backends[data] = topo
                 self._widgets['sceneviz'].rootContext().setContextProperty("modelData", topo)
 
         treeview.clicked.connect(treeItemClicked)
