@@ -12,12 +12,15 @@ Entity {
   property alias transform3d: transform
   property real width
   property real height
+  property real gridResolution: 0.2
+  property real lineWidth: 1.0
+  property color lineColor: "white"
 
   GridMaterial {
     id: gridMaterial
-    lineWidth: 1.0
-    lineColor: "white"
-    gridResolution: 0.2
+    lineColor: grid.lineColor
+    lineWidth: grid.lineWidth
+    gridResolution: grid.gridResolution
   }
 
   PlaneMesh {

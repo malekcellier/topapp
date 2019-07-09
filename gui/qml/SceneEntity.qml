@@ -19,13 +19,13 @@ Entity {
         projectionType: CameraLens.PerspectiveProjection
         fieldOfView: 45
         nearPlane : 0.1
-        farPlane : 1000.0
-        position: Qt.vector3d( 100.0, 100, 45.0 )
-        upVector: Qt.vector3d( 0.0, 0.0, 1.0 )
+        farPlane : 10000.0
+        position: Qt.vector3d( 200.0, 100, 200.0 )
+        upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
         viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
     }
 
-    OrbitCameraController { 
+    OrbitCameraController {
         camera: camera
         lookSpeed: 1000
         linearSpeed: 1000
@@ -80,10 +80,11 @@ Entity {
         id: grid
         width: maxModelPosition.x - minModelPosition.x
         height: maxModelPosition.y - minModelPosition.y
-        transform3d.rotationX: 90
+        gridResolution: 0.05
     }
 
     AllAxisEntity {
         id: allaxis
+        axesScale: (axesPosition.minus(camera.position)).length() / 80
     }
 }
