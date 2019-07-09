@@ -54,10 +54,22 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
         - allow to drop shapes on the scene
         - should open in a tab each time a topology configuration is chosen
     """
-    def __init__(self, parent):
+    def __init__(self, parent=None, live=False):
         super().__init__(parent)
+        if live:
+            from livecoding import register_types
+            from livecoding.gui import MODULE_PATH
+
+            self.engine().addImportPath(os.path.join(MODULE_PATH, '..'))
+            register_types()
+            main = "gui/qml/live.qml"
+            self.rootContext().setContextProperty(
+                "userProjectPath", os.path.realpath('gui/qml')
+            )
+        else:
+            main = "gui/qml/QmlScene.qml"
+        self.setSource(QUrl.fromLocalFile(main))
         self.rootContext().setContextProperty("modelData", [])
-        self.setSource(QUrl.fromLocalFile("gui/qml/QmlScene.qml"))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
@@ -129,7 +141,7 @@ class TopologyGui(QMainWindow):
         # depending on the selection on the tree-widget
 
         # Scene is the representation in 3D of the scene to simulate
-        widget_sceneviz = SceneViz(widget_tabs)
+        widget_sceneviz = SceneViz(parent=widget_tabs, live=True)
         widget_tabs.addTab(widget_sceneviz, 'Sceneviz')
         self._widgets['sceneviz'] = widget_sceneviz
         # Data is a set of plots of the toutput data

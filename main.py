@@ -3,8 +3,9 @@
 # Created: 2019-07-03
 
 import sys
-# import os
-# os.environ['QT_API'] = 'pyqt5'
+import os
+
+os.environ['QT_API'] = 'pyqt5'
 from qtpy.QtWidgets import QApplication
 from gui.gui import TopologyGui, pwdi, QIcon
 
