@@ -35,6 +35,7 @@ class Positions(ABC):
         self.preset = preset_
         x, y = self._generate()
         assert x.size == y.size, f'vector x={x.size} & y={y.size} should be equal'
+        x, y = np.float64(x), np.float64(y)
 
         # X/Y positions list
         self.x = x
