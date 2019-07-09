@@ -1,0 +1,39 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.2.3
+    hooks:
+      - id: check-ast
+      - id: check-byte-order-marker
+      - id: trailing-whitespace
+        exclude: >
+            (?x)^(
+                .*\.patch
+            )$
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-xml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+- repo: local
+  hooks:
+    -   id: black
+        name: Run black code formatter
+        description: This hook formats Python code.
+        entry: black -q
+        language: system
+        args: [-S]
+        types: [python]
+        # note: use env LC_ALL=C.UTF-8 on Linux
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.2.3
+    hooks:
+      - id: flake8
+        # note: ignores and excluded files in .flake8
+        # additional_dependencies: [pep8-naming]
