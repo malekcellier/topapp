@@ -25,8 +25,7 @@ Entity {
 
     Transform {
         id: modelPositionTransform
-        rotationX: 90
-        translation: Qt.vector3d(modelPosition.x, modelPosition.y, coneMesh.length / 2)
+        translation: Qt.vector3d(modelPosition.x, coneMesh.length / 2, modelPosition.y)
     }
 
     Entity {
