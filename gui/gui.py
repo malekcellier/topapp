@@ -304,7 +304,8 @@ class TopologyGui(QMainWindow):
         elif depth == 2:
             # clicked in 2nd level -> highlight selected node type
             widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
-            widget_sceneviz.highlightNodeType(data)
+            if(isinstance(widget_sceneviz, SceneViz)):
+                widget_sceneviz.highlightNodeType(data)
 
     def _build_left_dock(self):
         # QTreeView for the project view        
