@@ -1,11 +1,12 @@
 
+import QtQuick 2.0
 
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
 
-import QtQuick 2.0 as QQ2
+import "."
 
 Entity {
     id: sceneRoot
@@ -41,34 +42,37 @@ Entity {
         id: material
     }
 
-    /*
-    SphereMesh {
-        id: sphereMesh
-        radius: 3
-    }
 
-    Transform {
-        id: sphereTransform
-        matrix: {
-            var m = Qt.matrix4x4();
-            m.translate(Qt.vector3d(20, 0, 0));
-            return m;
+
+    // in 3D, use NodeInstantiator instead of Repeater
+    // topologyModle is a list of nodes, which contain a list of positions, which contain a list of X/Y coordinates:
+    NodeInstantiator {
+        model: topologyModel.nodes
+
+        NodeInstantiator {
+            model: modelData.positions
+
+            NodeInstantiator {
+                id: pos
+                property var xPositions: modelData.x
+                property var yPositions: modelData.y
+                model: xPositions.length
+
+                TypeANodeEntity {
+                    modelPosition {
+                        x: pos.xPositions[index]
+                        y: pos.yPositions[index]
+                    }
+                }
+            }
         }
     }
 
-    Entity {
-        id: sphereEntity
-        components: [ sphereMesh, material, sphereTransform ]
-    }
-    */
-
-
-    TypeANodeEntity {}
     Grid {
         id: grid
         height: 100
         width: 100
-        transform.rotationX: 90
+        transform3d.rotationX: 90
     }
 
     AllAxisEntity {
