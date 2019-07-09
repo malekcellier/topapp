@@ -40,8 +40,10 @@ class Positions(ABC):
         self.x = x
         self.y = y
 
-        # absolute angle from rotate() function
+        # absolute rotation, translation and scale from functions
         self.angle = 0
+        self.translation = {"x": 0, "y": 0}
+        self.absolute_scale = 1
 
         self._x0 = x.copy()
         self._y0 = y.copy()
@@ -83,11 +85,14 @@ class Positions(ABC):
         """Scale the positions by the scaling factor"""
         self.x *= scaling_factor
         self.y *= scaling_factor
+        self.absolute_scale *= scaling_factor
 
     def translate(self, delta_x=0, delta_y=0):
         """Translate the points with delta_x in x and delta_y in y"""
         self.x += delta_x
         self.y += delta_y
+        self.translation["x"] += delta_x
+        self.translation["y"] += delta_y
 
     @staticmethod
     def _rot_mat(angle_deg):

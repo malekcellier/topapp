@@ -42,9 +42,44 @@ class PropertiesTreeDelegate(QStyledItemDelegate):
                 return cbox
             elif role == 'preset_combo':
                 pass
-            elif role == 'spin':
+            elif role == 'spin_scale':
                 spin = QSpinBox(parent)
                 spin.setValue(index.data(PropertiesModel.DATA_ROLE))
+                spin.setMinimum(1)
+                spin.setMaximum(100)
+
+                def update_scale(newValue):
+                    positions = index.parent().data(PropertiesModel.MODEL_ROLE)
+                    oldValue = positions.absolute_scale
+                    positions.scale(newValue / oldValue)
+
+                spin.valueChanged.connect(update_scale)
+
+                return spin
+            elif role == 'spin_x':
+                spin = QSpinBox(parent)
+                spin.setValue(index.data(PropertiesModel.DATA_ROLE))
+
+                def update_x(newValue):
+                    positions = index.parent().parent().data(PropertiesModel.MODEL_ROLE)
+                    print(f"update x, positions:{positions}, translation:{positions.translation}")
+                    oldValue = positions.translation["x"]
+                    positions.translate(newValue - oldValue, 0)
+
+                spin.valueChanged.connect(update_x)
+
+                return spin
+            elif role == 'spin_y':
+                spin = QSpinBox(parent)
+                spin.setValue(index.data(PropertiesModel.DATA_ROLE))
+
+                def update_y(newValue):
+                    positions = index.parent().parent().data(PropertiesModel.MODEL_ROLE)
+                    oldValue = positions.translation["y"]
+                    positions.translate(0, newValue - oldValue)
+
+                spin.valueChanged.connect(update_y)
+
                 return spin
             elif role == 'rotate_slider':
                 slider = QSlider(parent)

@@ -18,9 +18,27 @@ class GuiPositions(QObject):
     def angle(self):
         return self.position.angle
 
+    def absolute_scale(self):
+        return self.position.absolute_scale
+
+    def translation(self):
+        return self.position.translation
+
     def rotate(self, angle_deg):
         self.position.rotate(angle_deg)
         self.angle_changed.emit()
+        self.x_changed.emit()
+        self.y_changed.emit()
+
+    def translate(self, x, y):
+        self.position.translate(x, y)
+        self.translation_changed.emit()
+        self.x_changed.emit()
+        self.y_changed.emit()
+
+    def scale(self, scale_factor):
+        self.position.scale(scale_factor)
+        self.absolute_scale_changed.emit()
         self.x_changed.emit()
         self.y_changed.emit()
 
@@ -30,6 +48,10 @@ class GuiPositions(QObject):
     y = Property('QVariant', y, notify=y_changed)
     angle_changed = Signal()
     angle = Property('QVariant', angle, notify=angle_changed)
+    absolute_scale_changed = Signal()
+    absolute_scale = Property('QVariant', absolute_scale, notify=absolute_scale_changed)
+    translation_changed = Signal()
+    translation = Property('QVariant', translation, notify=translation_changed)
 
 class GuiNodes(QObject):
     def __init__(self, key, nodes, parent=None):
