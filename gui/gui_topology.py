@@ -21,16 +21,22 @@ class GuiPositions(QObject):
     y = Property('QVariant', y, notify=y_changed)
 
 class GuiNodes(QObject):
-    def __init__(self, nodes, parent=None):
+    def __init__(self, key, nodes, parent=None):
         super().__init__(parent)
         self.nodes = nodes
         self._positions = [GuiPositions(positions) for positions in self.nodes.positions]
+        self._node_type = key
 
     def positions(self):
         return self._positions
 
+    def nodeType(self):
+        return self._node_type
+
     positions_changed = Signal()
     positions = Property('QVariant', positions, notify=positions_changed)
+    node_type_changed = Signal()
+    nodeType = Property(str, nodeType, notify=node_type_changed)
 
 
 class GuiTopology(QObject):
@@ -40,7 +46,7 @@ class GuiTopology(QObject):
     def __init__(self, preset, parent=None):
         super().__init__(parent)
         self.topology = Topology(preset)
-        self._nodes = [GuiNodes(nodes) for nodes in self.topology.nodes.values()] 
+        self._nodes = [GuiNodes(key, nodes) for key, nodes in self.topology.nodes.items()]
 
     def presetName(self):
         return self.topology.preset_name

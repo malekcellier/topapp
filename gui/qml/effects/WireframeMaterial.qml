@@ -20,4 +20,5 @@ Material {
         Parameter { name: "line.width"; value: root.lineWidth },
         Parameter { name: "line.color"; value: root.lineColor }
     ]
+    effect: WireframeEffect { }
 }

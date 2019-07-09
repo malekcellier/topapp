@@ -7,6 +7,7 @@ import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
 
 import "."
+import "nodes"
 
 Entity {
     id: sceneRoot
@@ -29,7 +30,7 @@ Entity {
         camera: camera
         lookSpeed: 1000
         linearSpeed: 1000
-        }
+    }
 
     components: [
         RenderSettings {
@@ -41,37 +42,59 @@ Entity {
         InputSettings { }
     ]
 
+    Component {
+        id: typeAComponent
+
+        TypeANodeEntity {
+            modelPosition { x: modelData.x; y: modelData.y }
+            onModelPositionChanged: updateModelBounds(modelPosition)
+        }
+    }
+
+    Component {
+        id: typeBComponent
+
+        TypeBNodeEntity {
+            modelPosition { x: modelData.x; y: modelData.y }
+            onModelPositionChanged: updateModelBounds(modelPosition)
+        }
+    }
+
+    Component {
+        id: typeCComponent
+
+        TypeCNodeEntity {
+            modelPosition { x: modelData.x; y: modelData.y }
+            onModelPositionChanged: updateModelBounds(modelPosition)
+        }
+    }
+
     // in 3D, use NodeInstantiator instead of Repeater
     // topologyModle is a list of nodes, which contain a list of positions, which contain a list of X/Y coordinates:
     NodeInstantiator {
+        id: instantiator
         model: topologyModel.nodes
 
+        property var componentMap: ({
+                                        "type_a": typeAComponent,
+                                        "type_b": typeBComponent
+                                    })
+
         NodeInstantiator {
+            id: node
             model: modelData.positions
+            property string nodeType: modelData.nodeType
+            onNodeTypeChanged: console.log("type", nodeType)
 
             NodeInstantiator {
                 id: pos
                 property var xPositions: modelData.x
                 property var yPositions: modelData.y
-                model: xPositions.length
 
-                TypeANodeEntity {
-                    modelPosition {
-                        x: pos.xPositions[index]
-                        y: pos.yPositions[index]
-                    }
-
-                    onModelPositionChanged: {
-                      maxModelPosition = Qt.point(
-                            Math.max(modelPosition.x, maxModelPosition.x),
-                            Math.max(modelPosition.y, maxModelPosition.y)
-                            )
-                      minModelPosition = Qt.point(
-                            Math.min(modelPosition.x, minModelPosition.x),
-                            Math.min(modelPosition.y, minModelPosition.y)
-                            )
-                    }
-                }
+                model: xPositions.map(function(x, i) {
+                    return Qt.point(xPositions[i], yPositions[i])
+                })
+                delegate: instantiator.componentMap[node.nodeType] || typeAComponent
             }
         }
     }
@@ -86,5 +109,16 @@ Entity {
     AllAxisEntity {
         id: allaxis
         axesScale: (axesPosition.minus(camera.position)).length() / 80
+    }
+
+    function updateModelBounds(modelPosition) {
+        maxModelPosition = Qt.point(
+                    Math.max(modelPosition.x, maxModelPosition.x),
+                    Math.max(modelPosition.y, maxModelPosition.y)
+                    )
+        minModelPosition = Qt.point(
+                    Math.min(modelPosition.x, minModelPosition.x),
+                    Math.min(modelPosition.y, minModelPosition.y)
+                    )
     }
 }

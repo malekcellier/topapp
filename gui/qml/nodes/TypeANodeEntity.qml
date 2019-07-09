@@ -5,14 +5,14 @@ import Qt3D.Extras 2.0
 
 import QtQuick 2.0 as QQ2
 
-import "effects"
+import "../effects"
 
 Entity {
     property point modelPosition: Qt.point(0, 0)
     
     WireframeMaterial {
         id: material
-        effect: WireframeEffect {}
+        diffuse: "green"
     }
 
     ConeMesh {
