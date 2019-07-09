@@ -1,7 +1,6 @@
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtCore import Qt
-
-from app.presets import presets
+from .gui_presets import presets
 
 TYPE_ROLE = Qt.UserRole
 
@@ -16,8 +15,10 @@ class ProjectModel(QStandardItemModel):
         super().__init__(parent)
         self.load()
         self.setColumnCount(2)
+        presets.topo_changed.connect(self.load)
 
     def load(self):
+        self.clear()
         """Walk the tree starting from topology"""
         for el, val in presets.topology.items():
             item = QStandardItem(el)

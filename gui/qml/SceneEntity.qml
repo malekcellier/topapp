@@ -77,7 +77,8 @@ Entity {
 
         property var componentMap: ({
                                         "type_a": typeAComponent,
-                                        "type_b": typeBComponent
+                                        "type_b": typeBComponent,
+                                        "type_c": typeCComponent
                                     })
 
         NodeInstantiator {

@@ -1,16 +1,15 @@
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtCore import Qt
-from enum import Enum
 
 
 class PropertiesModelRoles:
     TYPE_ROLE = Qt.UserRole
     DATA_ROLE = Qt.UserRole + 1
 
-from app.presets import presets
+from .gui_presets import presets
 
 
-class PropertiesModel(QStandardItemModel, PropertiesModelRoles):
+class PropertiesTreeModel(QStandardItemModel, PropertiesModelRoles):
     """Properties model
 
 
@@ -65,3 +64,4 @@ class PropertiesModel(QStandardItemModel, PropertiesModelRoles):
 
         elif type_ == 'motion':
             pass
+

@@ -17,7 +17,7 @@ from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.Qt3DExtras import (Qt3DExtras)
 
 from .project_model import ProjectModel, TYPE_ROLE
-from .properties_model import PropertiesModel
+from .properties_model import PropertiesTreeModel
 from .project_delegate import TreeDelegate, PropertiesTreeDelegate
 
 from .gui_topology import GuiTopology
@@ -328,7 +328,7 @@ class TopologyGui(QMainWindow):
         v_layout.setStretchFactor(treeview, 2)
         treedelegate = PropertiesTreeDelegate()
         treeview.setItemDelegate(treedelegate)
-        pm = PropertiesModel()
+        pm = PropertiesTreeModel()
         self._models['properties'] = pm
         treeview.setModel(pm)
         treeview.expandAll()

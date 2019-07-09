@@ -1,5 +1,6 @@
 from app.topology import Topology
 from qtpy.QtCore import QObject, Signal, Property, QAbstractItemModel
+from .gui_presets import presets
 
 
 class GuiPositions(QObject):
@@ -19,6 +20,7 @@ class GuiPositions(QObject):
     x = Property('QVariant', x, notify=x_changed)
     y_changed = Signal()
     y = Property('QVariant', y, notify=y_changed)
+
 
 class GuiNodes(QObject):
     def __init__(self, key, nodes, parent=None):
@@ -45,6 +47,13 @@ class GuiTopology(QObject):
     """
     def __init__(self, preset, parent=None):
         super().__init__(parent)
+        self.preset = preset
+        self.load(preset)
+        presets.topo_changed.connect(self.load)
+
+    def load(self, preset):
+        if self.preset != preset:
+            return
         self.topology = Topology(preset)
         self._nodes = [GuiNodes(key, nodes) for key, nodes in self.topology.nodes.items()]
 
