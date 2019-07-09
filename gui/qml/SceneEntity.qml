@@ -11,6 +11,9 @@ import "."
 Entity {
     id: sceneRoot
 
+    property point maxModelPosition: Qt.point(0, 0)
+    property point minModelPosition: Qt.point(0, 0)
+
     Camera {
         id: camera
         projectionType: CameraLens.PerspectiveProjection
@@ -38,12 +41,6 @@ Entity {
         InputSettings { }
     ]
 
-    PhongMaterial {
-        id: material
-    }
-
-
-
     // in 3D, use NodeInstantiator instead of Repeater
     // topologyModle is a list of nodes, which contain a list of positions, which contain a list of X/Y coordinates:
     NodeInstantiator {
@@ -63,6 +60,17 @@ Entity {
                         x: pos.xPositions[index]
                         y: pos.yPositions[index]
                     }
+
+                    onModelPositionChanged: {
+                      maxModelPosition = Qt.point(
+                            Math.max(modelPosition.x, maxModelPosition.x),
+                            Math.max(modelPosition.y, maxModelPosition.y)
+                            )
+                      minModelPosition = Qt.point(
+                            Math.min(modelPosition.x, minModelPosition.x),
+                            Math.min(modelPosition.y, minModelPosition.y)
+                            )
+                    }
                 }
             }
         }
@@ -70,13 +78,12 @@ Entity {
 
     Grid {
         id: grid
-        height: 100
-        width: 100
+        width: maxModelPosition.x - minModelPosition.x
+        height: maxModelPosition.y - minModelPosition.y
         transform3d.rotationX: 90
     }
 
     AllAxisEntity {
         id: allaxis
     }
-
 }
