@@ -48,6 +48,7 @@ Entity {
         TypeANodeEntity {
             modelPosition { x: modelData.x; y: modelData.y }
             onModelPositionChanged: updateModelBounds(modelPosition)
+            isHighlighted: highlightNodeType === "type_a"
         }
     }
 
@@ -57,6 +58,7 @@ Entity {
         TypeBNodeEntity {
             modelPosition { x: modelData.x; y: modelData.y }
             onModelPositionChanged: updateModelBounds(modelPosition)
+            isHighlighted: highlightNodeType === "type_b"
         }
     }
 
@@ -66,6 +68,7 @@ Entity {
         TypeCNodeEntity {
             modelPosition { x: modelData.x; y: modelData.y }
             onModelPositionChanged: updateModelBounds(modelPosition)
+            isHighlighted: highlightNodeType === "type_c"
         }
     }
 
@@ -77,14 +80,14 @@ Entity {
 
         property var componentMap: ({
                                         "type_a": typeAComponent,
-                                        "type_b": typeBComponent
+                                        "type_b": typeBComponent,
+                                        "type_c": typeCComponent
                                     })
 
         NodeInstantiator {
             id: node
             model: modelData.positions
             property string nodeType: modelData.nodeType
-            onNodeTypeChanged: console.log("type", nodeType)
 
             NodeInstantiator {
                 id: pos

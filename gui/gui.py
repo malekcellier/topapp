@@ -70,6 +70,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
         else:
             main = "gui/qml/QmlScene.qml"
             self.rootContext().setContextProperty("topologyModel", [])
+            self.rootContext().setContextProperty("highlightNodeType", "")
         self.setSource(QUrl.fromLocalFile(main))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -81,6 +82,9 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
         self.rootObject().setWidth(self.width())
         self.rootObject().setHeight(self.height())
 
+    def highlightNodeType(self, nodeType):
+        print("highlight", nodeType)
+        self.rootContext().setContextProperty("highlightNodeType", nodeType)
 
 class TopologyGui(QMainWindow):
     """The entire application
@@ -291,14 +295,21 @@ class TopologyGui(QMainWindow):
         w_project_tree.setWidget(treeview)
 
         def treeItemClicked(index):
+            tempIndex = index
+            depth = 0
+            while tempIndex.parent().isValid():
+                tempIndex = tempIndex.parent()
+                depth += 1
+
             data = index.data(Qt.DisplayRole)
             type_ = index.data(TYPE_ROLE)
             print(f'type: {type_}')
             print(data)
             print(f'parent: {index.parent().isValid()}')
-            if not index.parent().isValid():
+            widget_tabs = self._widgets['tabs']
+            if depth == 0:
+                # clicked in root level -> open topology tab
                 # Scene is the representation in 3D of the scene to simulate
-                widget_tabs = self._widgets['tabs']#
                 tab_key = 'sceneviz_' + data
                 if tab_key not in self._widgets:
                     widget_sceneviz = SceneViz(parent=widget_tabs, live=False, topologyName=data)
@@ -306,6 +317,10 @@ class TopologyGui(QMainWindow):
                     widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
                     self.backends[data] = widget_sceneviz.topology
                 widget_tabs.setCurrentWidget(self._widgets[tab_key])
+            elif depth == 2:
+                # clicked in 2nd level -> highlight selected node type
+                widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
+                widget_sceneviz.highlightNodeType(data)
 
 
         treeview.clicked.connect(treeItemClicked)
