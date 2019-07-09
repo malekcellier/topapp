@@ -68,6 +68,7 @@ Entity {
         id: grid
         height: 100
         width: 100
+        transform.rotationX: 90
     }
 
     AllAxisEntity {
