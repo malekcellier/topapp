@@ -35,12 +35,14 @@ class ProjectModel(QStandardItemModel):
                     if isinstance(p, dict):
                         p = 'dict..'
                     pos = QStandardItem(p)
+                    pos.setData('position', TYPE_ROLE)
                     node_layout.appendRow([QStandardItem('position'), pos])
 
                     m = nval.get('motion')
                     if isinstance(m, dict):
                         m = 'dict..'
                     mot = QStandardItem(m)
+                    mot.setData('motion', TYPE_ROLE)
                     node_layout.appendRow([QStandardItem('motion'), mot])
 
                     mdl = QStandardItem(nval.get('model'))
