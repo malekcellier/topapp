@@ -16,7 +16,7 @@ from qtpy.QtCore import (Qt, QUrl, QSizeF)
 #from qtpy.Qt3DRender import (Qt3DRender)
 #from qtpy.Qt3DExtras import (Qt3DExtras)
 
-from .project_model import ProjectModel, TYPE_ROLE
+from .project_model import ProjectModel
 from .properties_model import PropertiesTreeModel
 from .project_delegate import TreeDelegate, PropertiesTreeDelegate
 
@@ -44,6 +44,7 @@ class DataViz(QQuickWidget):
     def __init__(self, parent):
         super().__init__(parent)
         main = "gui/qml/QmlDataViz.qml"
+        self.rootContext().setContextProperty("kpiModel", [])
         self.setSource(QUrl.fromLocalFile(main))
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -137,7 +138,7 @@ class TopologyGui(QMainWindow):
         """The main window"""
         self.setWindowTitle('Qt experiments')
         self.setWindowIcon(QIcon('icons/light-bulb.png'))
-        self.setGeometry(1920+100, 100, 1200, 800)
+        self.setGeometry(100, 100, 2000, 1200)
 
         self._build_tab_widget()
 
@@ -293,10 +294,11 @@ class TopologyGui(QMainWindow):
         while tempIndex.parent().isValid():
             tempIndex = tempIndex.parent()
             depth += 1
+        rootIndex = tempIndex
         topologyName = tempIndex.data(Qt.DisplayRole)
 
         data = index.data(Qt.DisplayRole)
-        type_ = index.data(TYPE_ROLE)
+        type_ = index.data(ProjectModel.TYPE_ROLE)
         print(f'type: {type_}')
         print(data)
         print(f'parent: {index.parent().isValid()}')
@@ -310,12 +312,21 @@ class TopologyGui(QMainWindow):
                 self._widgets[tab_key] = widget_sceneviz
                 widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
                 self.backends[data] = widget_sceneviz.topology
+                self._models["project"].load_kpis(rootIndex, self.backends[data].topology)
             widget_tabs.setCurrentWidget(self._widgets[tab_key])
         elif depth == 2:
             # clicked in 2nd level -> highlight selected node type
             widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
             if(isinstance(widget_sceneviz, SceneViz)):
                 widget_sceneviz.highlightNodeType(data)
+        elif depth == 3:
+            nodeType = index.data(ProjectModel.TYPE_ROLE)
+            print("selected KPI")
+            if nodeType == "kpi":
+                data_viz = self._widgets['dataviz']
+                kpi = index.data(ProjectModel.MODEL_ROLE)
+                print(f"selected KPI: {kpi}")
+                data_viz.rootContext().setContextProperty("kpiModel", [float(n) for n in kpi])
         elif depth == 4:
             nodeType = index.parent().parent().data(Qt.DisplayRole)
             positionIndex = index.parent().row()
@@ -335,6 +346,7 @@ class TopologyGui(QMainWindow):
         treedelegate = TreeDelegate()
         treeview.setItemDelegate(treedelegate)
         pm = ProjectModel()
+        self._models["project"] = pm
         treeview.setModel(pm)
         treeview.expandAll()
         treeview.resizeColumnToContents(0)

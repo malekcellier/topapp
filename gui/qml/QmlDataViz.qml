@@ -6,23 +6,7 @@ import QtCharts 2.3
 Item {
     id: root
 
-
-    property var chartData: [
-        [
-            { x: 0, y: 0 },
-            { x: 1, y: 3},
-            { x: 2, y: 7},
-            { x: 3, y: 3},
-            { x: 4, y: 10}
-        ],
-        [
-            { x: 6, y: 0 },
-            { x: 7, y: 3},
-            { x: 8, y: 7},
-            { x: 9, y: 3},
-            { x: 10, y: 10}
-        ]
-    ]
+    property var chartData: [kpiModel]
 
     GridLayout {
         id: grid
@@ -35,7 +19,9 @@ Item {
 
             Item {
                 id: chartContainer
+
                 property var chartData: root.chartData[index]
+                onChartDataChanged: series.loadData()
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -51,29 +37,18 @@ Item {
                         id: series
                         name: "LineSeries"
 
-                        Component.onCompleted: {
-                            chartContainer.chartData.forEach(function(item) {
-                                append(item.x, item.y)
+                        Component.onCompleted: loadData()
+
+                        function loadData() {
+                            if(!chartContainer.chartData) return
+
+                            chartContainer.chartData.forEach(function(item, index) {
+                                append(index, item)
                             })
                             chart.axisX(series).min = 0
-                            chart.axisX(series).max = 10
+                            chart.axisX(series).max = chartContainer.chartData.length
                             chart.axisY(series).min = 0
-                            chart.axisY(series).max = 10
-                        }
-                    }
-
-                    LineSeries {
-                        id: series2
-                        name: "LineSeries"
-
-                        Component.onCompleted: {
-                            chartContainer.chartData.forEach(function(item) {
-                                append(item.x, item.y + 5)
-                            })
-                            chart.axisX(series).min = 0
-                            chart.axisX(series).max = 10
-                            chart.axisY(series).min = 0
-                            chart.axisY(series).max = 10
+                            chart.axisY(series).max = 1
                         }
                     }
                 }
@@ -81,8 +56,4 @@ Item {
             }
         }
     }
-
-
-
-
 }

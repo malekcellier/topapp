@@ -1,7 +1,7 @@
 from qtpy.QtWidgets import QStyledItemDelegate, QComboBox, QSpinBox, QSlider, QFrame, QHBoxLayout
 from qtpy.QtCore import Qt
 
-from .project_model import TYPE_ROLE
+from .project_model import ProjectModel
 from .properties_model import PropertiesTreeModel
 from .gui_presets import presets
 
@@ -14,7 +14,7 @@ class TreeDelegate(QStyledItemDelegate):
     """
     def createEditor(self, parent, option, index):
         if index.isValid():
-            role = index.data(TYPE_ROLE)
+            role = index.data(ProjectModel.TYPE_ROLE)
             if role == 'combo':
                 node_types = list(presets.nodes.keys())
                 cbox = QComboBox(parent)

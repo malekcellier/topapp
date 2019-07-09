@@ -33,6 +33,7 @@ class Connections:
         self.values = -1*np.inf*np.ones((self.src.n_el, self.snk.n_el))
         self.kpis = {}
         self.update()
+        self.compute()
 
     def update(self):
         """Update the values
