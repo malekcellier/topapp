@@ -53,6 +53,15 @@ class PropertiesTreeDelegate(QStyledItemDelegate):
                 slider.setMaximum(359)
                 slider.setValue(index.data(PropertiesModel.DATA_ROLE))
                 slider.setAutoFillBackground(True)
+                def update_rotation(newValue):
+                    positions = index.parent().data(PropertiesModel.MODEL_ROLE)
+                    oldValue = positions.angle
+                    print(f"rotate by: {newValue - oldValue}")
+                    print(f"X before: {positions.x}")
+                    positions.rotate(newValue - oldValue)
+                    print(f"X after: {positions.x}")
+
+                slider.valueChanged.connect(update_rotation)
                 return slider
 
         return super().createEditor(parent, option, index)
