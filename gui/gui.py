@@ -32,7 +32,7 @@ def pwdi(icon_name):
     return icon_path
 
 
-class DataViz(QWidget):
+class DataViz(QQuickWidget):
     """Using QtDataVisualization
     
     Placeholder for the OpenGL based data visualization tool which should allow the following:
@@ -43,7 +43,16 @@ class DataViz(QWidget):
     """
     def __init__(self, parent):
         super().__init__(parent)
+        main = "gui/qml/QmlDataViz.qml"
+        self.setSource(QUrl.fromLocalFile(main))
+        self.resizeMode = QQuickWidget.SizeRootObjectToView
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
+    # workaround: have QML view same size as parent widget
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.rootObject().setWidth(self.width())
+        self.rootObject().setHeight(self.height())
 
 class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
     """Using 3D library
@@ -68,7 +77,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
                 "userProjectPath", QUrl.fromLocalFile(os.path.realpath(os.path.join(os.path.dirname(__file__), 'qml'))) 
             )
         else:
-            main = "gui/qml/QmlScene.qml"
+            main = "gui/qml/QmlSceneViz.qml"
             self.rootContext().setContextProperty("topologyModel", [])
             self.rootContext().setContextProperty("highlightNodeType", "")
         self.setSource(QUrl.fromLocalFile(main))
