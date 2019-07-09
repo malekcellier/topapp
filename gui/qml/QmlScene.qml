@@ -29,31 +29,5 @@ Item {
             SceneEntity {}
 
         }
-
-        Text {
-            text: 'name: ' + modelData.presetName
-        }
-        Text {
-            text: 'x: ' + modelData.nodes[0].positions[0].x
-            y: 15
-        }
-        Text {
-            text: 'y: ' + modelData.nodes[0].positions[0].y
-            y: 30
-        }
-
-        /* repeater with modelData.nodes e
-        Repeater {
-            model: modelData.nodes
-            Repeater {
-                model: modelData.nodes[index]
-                Repeater {
-                    model: modelData.nodes[index].positions[]
-                }
-            }
-        }
-        */
-    }
-
- 
+    } 
 }
