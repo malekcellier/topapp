@@ -301,11 +301,13 @@ class TopologyGui(QMainWindow):
                 widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
                 self.backends[data] = widget_sceneviz.topology
             widget_tabs.setCurrentWidget(self._widgets[tab_key])
-        elif depth == 2:
-            # clicked in 2nd level -> highlight selected node type
-            widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
-            if(isinstance(widget_sceneviz, SceneViz)):
-                widget_sceneviz.highlightNodeType(data)
+        else:
+            self._models['properties'].load(type_, data)
+            if depth == 2:
+                # clicked in 2nd level -> highlight selected node type
+                widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
+                if(isinstance(widget_sceneviz, SceneViz)):
+                    widget_sceneviz.highlightNodeType(data)
 
     def _build_left_dock(self):
         # QTreeView for the project view        
