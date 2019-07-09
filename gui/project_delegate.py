@@ -47,21 +47,12 @@ class PropertiesTreeDelegate(QStyledItemDelegate):
                 spin.setValue(index.data(PropertiesModel.DATA_ROLE))
                 return spin
             elif role == 'rotate_slider':
-                """
-                slider_container = QFrame(parent)
-                slider = QSlider(slider_container)
-                """
                 slider = QSlider(parent)
                 slider.setOrientation(Qt.Horizontal)
                 slider.setMinimum(0)
                 slider.setMaximum(359)
                 slider.setValue(index.data(PropertiesModel.DATA_ROLE))
-                """
-                slider_container.setLayout(QHBoxLayout(parent))
-                slider_container.layout().addWidget(slider)
-                slider_container.show()
-                return slider_container
-                """
+                slider.setAutoFillBackground(True)
                 return slider
 
         return super().createEditor(parent, option, index)
