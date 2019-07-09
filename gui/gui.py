@@ -18,7 +18,7 @@ from qtpy.QtCore import (Qt, QUrl, QSizeF)
 
 from .project_model import ProjectModel, TYPE_ROLE
 from .properties_model import PropertiesModel
-from .project_delegate import TreeDelegate
+from .project_delegate import TreeDelegate, PropertiesTreeDelegate
 
 from .gui_topology import GuiTopology
 
@@ -104,6 +104,7 @@ class TopologyGui(QMainWindow):
         self._docks = {}  # holds ref to docks for visibility toggling
         self._widgets = {}  # holds references to the widgets
         self._slots = {}
+        self._models = {}
         self.backends = {}
         self.load_back_end()
         self._build()
@@ -277,6 +278,34 @@ class TopologyGui(QMainWindow):
         self._build_right_dock()
         self._build_bottom_dock()
 
+    def treeItemClicked(self, index):
+        tempIndex = index
+        depth = 0
+        while tempIndex.parent().isValid():
+            tempIndex = tempIndex.parent()
+            depth += 1
+
+        data = index.data(Qt.DisplayRole)
+        type_ = index.data(TYPE_ROLE)
+        print(f'type: {type_}')
+        print(data)
+        print(f'parent: {index.parent().isValid()}')
+        widget_tabs = self._widgets['tabs']
+        if depth == 0:
+            # clicked in root level -> open topology tab
+            # Scene is the representation in 3D of the scene to simulate
+            tab_key = 'sceneviz_' + data
+            if tab_key not in self._widgets:
+                widget_sceneviz = SceneViz(parent=widget_tabs, live=False, topologyName=data)
+                self._widgets[tab_key] = widget_sceneviz
+                widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
+                self.backends[data] = widget_sceneviz.topology
+            widget_tabs.setCurrentWidget(self._widgets[tab_key])
+        elif depth == 2:
+            # clicked in 2nd level -> highlight selected node type
+            widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
+            widget_sceneviz.highlightNodeType(data)
+
     def _build_left_dock(self):
         # QTreeView for the project view        
         w_project_tree = QDockWidget("Project tree", self)
@@ -292,38 +321,9 @@ class TopologyGui(QMainWindow):
         treeview.expandAll()
         treeview.resizeColumnToContents(0)
         treeview.resizeColumnToContents(1)
-        w_project_tree.setWidget(treeview)
+        w_project_tree.setWidget(treeview) 
 
-        def treeItemClicked(index):
-            tempIndex = index
-            depth = 0
-            while tempIndex.parent().isValid():
-                tempIndex = tempIndex.parent()
-                depth += 1
-
-            data = index.data(Qt.DisplayRole)
-            type_ = index.data(TYPE_ROLE)
-            print(f'type: {type_}')
-            print(data)
-            print(f'parent: {index.parent().isValid()}')
-            widget_tabs = self._widgets['tabs']
-            if depth == 0:
-                # clicked in root level -> open topology tab
-                # Scene is the representation in 3D of the scene to simulate
-                tab_key = 'sceneviz_' + data
-                if tab_key not in self._widgets:
-                    widget_sceneviz = SceneViz(parent=widget_tabs, live=False, topologyName=data)
-                    self._widgets[tab_key] = widget_sceneviz
-                    widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
-                    self.backends[data] = widget_sceneviz.topology
-                widget_tabs.setCurrentWidget(self._widgets[tab_key])
-            elif depth == 2:
-                # clicked in 2nd level -> highlight selected node type
-                widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
-                widget_sceneviz.highlightNodeType(data)
-
-
-        treeview.clicked.connect(treeItemClicked)
+        treeview.clicked.connect(self.treeItemClicked)
 
         # Formatting Editor
         w_properties = QDockWidget("Properties editor", self)
@@ -339,8 +339,12 @@ class TopologyGui(QMainWindow):
         treeview = QTreeView(w_properties)
         v_layout.addWidget(treeview)
         v_layout.setStretchFactor(treeview, 2)
+        treedelegate = PropertiesTreeDelegate()
+        treeview.setItemDelegate(treedelegate)
         pm = PropertiesModel()
+        self._models['properties'] = pm
         treeview.setModel(pm)
+        treeview.expandAll()
         # The tableview will only contain editable x,y shown as rows
         tableview = QTableView(w_properties)
         v_layout.addWidget(tableview)
