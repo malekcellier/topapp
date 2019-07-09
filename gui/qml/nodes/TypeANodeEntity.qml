@@ -9,10 +9,11 @@ import "../effects"
 
 Entity {
     property point modelPosition: Qt.point(0, 0)
+    property bool isHighlighted: false
     
     WireframeMaterial {
         id: material
-        diffuse: "green"
+        diffuse: isHighlighted ? "yellow" : "green"
     }
 
     ConeMesh {

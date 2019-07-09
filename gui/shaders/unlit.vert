@@ -20,4 +20,7 @@ void main()
 
     vertex = vertexPosition;
     gl_Position = mvp * vec4( vertexPosition, 1.0 );
+
+    // always on top
+    gl_Position.z = 0;
 }
