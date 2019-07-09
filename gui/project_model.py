@@ -4,7 +4,6 @@ from .gui_presets import presets
 
 TYPE_ROLE = Qt.UserRole
 
-
 class ProjectModel(QStandardItemModel):
     """Project model
 

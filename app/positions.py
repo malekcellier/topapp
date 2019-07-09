@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 
 from app.presets import presets
 
-
 class Positions(ABC):
     """
     Abstract Base Class that represent points position in 2D-space.
@@ -36,8 +35,16 @@ class Positions(ABC):
         self.preset = preset_
         x, y = self._generate()
         assert x.size == y.size, f'vector x={x.size} & y={y.size} should be equal'
+
+        # X/Y positions list
         self.x = x
         self.y = y
+
+        # absolute rotation, translation and scale from functions
+        self.angle = 0
+        self.translation = {"x": 0, "y": 0}
+        self.absolute_scale = 1
+
         self._x0 = x.copy()
         self._y0 = y.copy()
         self.delta = {'x': np.zeros(self.x.shape), 'y': np.zeros(self.y.shape)}
@@ -78,11 +85,14 @@ class Positions(ABC):
         """Scale the positions by the scaling factor"""
         self.x *= scaling_factor
         self.y *= scaling_factor
+        self.absolute_scale *= scaling_factor
 
     def translate(self, delta_x=0, delta_y=0):
         """Translate the points with delta_x in x and delta_y in y"""
         self.x += delta_x
         self.y += delta_y
+        self.translation["x"] += delta_x
+        self.translation["y"] += delta_y
 
     @staticmethod
     def _rot_mat(angle_deg):
@@ -100,6 +110,7 @@ class Positions(ABC):
 
         self.x = pos[0, :]
         self.y = pos[1, :]
+        self.angle = (self.angle + angle_deg) % 360
 
     def apply_transformations(self, tdict):
         """Apply the transformations included in the passed dictionary"""

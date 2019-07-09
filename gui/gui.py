@@ -284,6 +284,7 @@ class TopologyGui(QMainWindow):
         while tempIndex.parent().isValid():
             tempIndex = tempIndex.parent()
             depth += 1
+        topologyName = tempIndex.data(Qt.DisplayRole)
 
         data = index.data(Qt.DisplayRole)
         type_ = index.data(TYPE_ROLE)
@@ -301,13 +302,18 @@ class TopologyGui(QMainWindow):
                 widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
                 self.backends[data] = widget_sceneviz.topology
             widget_tabs.setCurrentWidget(self._widgets[tab_key])
-        else:
-            self._models['properties'].load(type_, data)
-            if depth == 2:
-                # clicked in 2nd level -> highlight selected node type
-                widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
-                if(isinstance(widget_sceneviz, SceneViz)):
-                    widget_sceneviz.highlightNodeType(data)
+        elif depth == 2:
+            # clicked in 2nd level -> highlight selected node type
+            widget_sceneviz = widget_tabs.widget(widget_tabs.currentIndex())
+            if(isinstance(widget_sceneviz, SceneViz)):
+                widget_sceneviz.highlightNodeType(data)
+        elif depth == 4:
+            nodeType = index.parent().parent().data(Qt.DisplayRole)
+            positionIndex = index.parent().row()
+            if topologyName in self.backends:
+                topology = self.backends[topologyName]
+                positions = topology.nodes_dict[nodeType].positions[positionIndex]
+                self._models['properties'].load(type_, data, positions)
 
     def _build_left_dock(self):
         # QTreeView for the project view        
