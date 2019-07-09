@@ -1,14 +1,18 @@
 
+import QtQuick 2.0
 
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
 
-import QtQuick 2.0 as QQ2
+import "."
 
 Entity {
     id: sceneRoot
+
+    property point maxModelPosition: Qt.point(0, 0)
+    property point minModelPosition: Qt.point(0, 0)
 
     Camera {
         id: camera
@@ -37,42 +41,49 @@ Entity {
         InputSettings { }
     ]
 
-    PhongMaterial {
-        id: material
-    }
+    // in 3D, use NodeInstantiator instead of Repeater
+    // topologyModle is a list of nodes, which contain a list of positions, which contain a list of X/Y coordinates:
+    NodeInstantiator {
+        model: topologyModel.nodes
 
-    /*
-    SphereMesh {
-        id: sphereMesh
-        radius: 3
-    }
+        NodeInstantiator {
+            model: modelData.positions
 
-    Transform {
-        id: sphereTransform
-        matrix: {
-            var m = Qt.matrix4x4();
-            m.translate(Qt.vector3d(20, 0, 0));
-            return m;
+            NodeInstantiator {
+                id: pos
+                property var xPositions: modelData.x
+                property var yPositions: modelData.y
+                model: xPositions.length
+
+                TypeANodeEntity {
+                    modelPosition {
+                        x: pos.xPositions[index]
+                        y: pos.yPositions[index]
+                    }
+
+                    onModelPositionChanged: {
+                      maxModelPosition = Qt.point(
+                            Math.max(modelPosition.x, maxModelPosition.x),
+                            Math.max(modelPosition.y, maxModelPosition.y)
+                            )
+                      minModelPosition = Qt.point(
+                            Math.min(modelPosition.x, minModelPosition.x),
+                            Math.min(modelPosition.y, minModelPosition.y)
+                            )
+                    }
+                }
+            }
         }
     }
 
-    Entity {
-        id: sphereEntity
-        components: [ sphereMesh, material, sphereTransform ]
-    }
-    */
-
-
-    TypeANodeEntity {}
     Grid {
         id: grid
-        height: 100
-        width: 100
-        transform.rotationX: 90
+        width: maxModelPosition.x - minModelPosition.x
+        height: maxModelPosition.y - minModelPosition.y
+        transform3d.rotationX: 90
     }
 
     AllAxisEntity {
         id: allaxis
     }
-
 }

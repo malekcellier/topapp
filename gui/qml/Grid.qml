@@ -9,7 +9,7 @@ import "effects"
 
 Entity {
   id: grid
-  property alias transform: transform
+  property alias transform3d: transform
   property real width
   property real height
 

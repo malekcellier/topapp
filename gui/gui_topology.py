@@ -1,5 +1,5 @@
 from app.topology import Topology
-from qtpy.QtCore import QObject, Property, QAbstractItemModel
+from qtpy.QtCore import QObject, Signal, Property, QAbstractItemModel
 
 
 class GuiPositions(QObject):
@@ -9,14 +9,16 @@ class GuiPositions(QObject):
         self._x = [float(n) for n in self.position.x]
         self._y = [float(n) for n in self.position.y]
 
-    @Property('QVariant')
     def x(self):
         return self._x
 
-    @Property('QVariant')
     def y(self):
         return self._y
 
+    x_changed = Signal()
+    x = Property('QVariant', x, notify=x_changed)
+    y_changed = Signal()
+    y = Property('QVariant', y, notify=y_changed)
 
 class GuiNodes(QObject):
     def __init__(self, nodes, parent=None):
@@ -24,9 +26,11 @@ class GuiNodes(QObject):
         self.nodes = nodes
         self._positions = [GuiPositions(positions) for positions in self.nodes.positions]
 
-    @Property('QVariant')
     def positions(self):
         return self._positions
+
+    positions_changed = Signal()
+    positions = Property('QVariant', positions, notify=positions_changed)
 
 
 class GuiTopology(QObject):
@@ -38,11 +42,14 @@ class GuiTopology(QObject):
         self.topology = Topology(preset)
         self._nodes = [GuiNodes(nodes) for nodes in self.topology.nodes.values()] 
 
-    @Property(str)
     def presetName(self):
         return self.topology.preset_name
 
-    @Property('QVariant')
     def nodes(self):
         return self._nodes
+
+    nodes_changed = Signal()
+    nodes = Property('QVariant', nodes, notify=nodes_changed)
+    presetName_changed = Signal()
+    presetName = Property(str, presetName, notify=presetName_changed)
 

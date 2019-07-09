@@ -55,7 +55,7 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
         - allow to drop shapes on the scene
         - should open in a tab each time a topology configuration is chosen
     """
-    def __init__(self, parent=None, live=False):
+    def __init__(self, parent=None, live=False, topologyName=""):
         super().__init__(parent)
         if live:
             from livecoding import register_types
@@ -69,10 +69,12 @@ class SceneViz(QQuickWidget):  # or from Qt3DExtras.Qt3DWindow):
             )
         else:
             main = "gui/qml/QmlScene.qml"
+            self.rootContext().setContextProperty("topologyModel", [])
         self.setSource(QUrl.fromLocalFile(main))
-        self.rootContext().setContextProperty("modelData", [])
         self.resizeMode = QQuickWidget.SizeRootObjectToView
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.topology = GuiTopology(topologyName)
+        self.rootContext().setContextProperty("topologyModel", self.topology)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -141,10 +143,6 @@ class TopologyGui(QMainWindow):
         # The actual fonctionality should dynamically create those components
         # depending on the selection on the tree-widget
 
-        # Scene is the representation in 3D of the scene to simulate
-        widget_sceneviz = SceneViz(parent=widget_tabs, live=False)
-        widget_tabs.addTab(widget_sceneviz, 'Sceneviz')
-        self._widgets['sceneviz'] = widget_sceneviz
         # Data is a set of plots of the toutput data
         widget_dataviz = DataViz(widget_tabs)
         widget_tabs.addTab(widget_dataviz, 'Dataviz')
@@ -299,11 +297,15 @@ class TopologyGui(QMainWindow):
             print(data)
             print(f'parent: {index.parent().isValid()}')
             if not index.parent().isValid():
-                topo = GuiTopology(data)
-                self.backends[data] = topo
-                self._widgets['sceneviz'].rootContext().setContextProperty("modelData", topo)
-            else:
-                # Handling the properties view
+                # Scene is the representation in 3D of the scene to simulate
+                widget_tabs = self._widgets['tabs']#
+                tab_key = 'sceneviz_' + data
+                if tab_key not in self._widgets:
+                    widget_sceneviz = SceneViz(parent=widget_tabs, live=False, topologyName=data)
+                    self._widgets[tab_key] = widget_sceneviz
+                    widget_tabs.addTab(widget_sceneviz, 'SceneViz: ' + data)
+                    self.backends[data] = widget_sceneviz.topology
+                widget_tabs.setCurrentWidget(self._widgets[tab_key])
 
 
         treeview.clicked.connect(treeItemClicked)
